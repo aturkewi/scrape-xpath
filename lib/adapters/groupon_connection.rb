@@ -12,7 +12,7 @@ class GrouponConnection
     page = get_page(url)
     prices = get_prices(page)
     quantites = get_quanitity(page)
-    {prices: prices, quantites: quantites}
+    format_data(prices, quantites)
   end
 
   def get_page(url)
@@ -30,6 +30,12 @@ class GrouponConnection
     quantity_nodes = page.xpath("//p[@class='breakout-sold-message']")
     quantity_nodes.collect do |node|
       node.text.gsub(/[^\d]/,'').to_i
+    end
+  end
+
+  def format_data(prices, quantites)
+    quantites.each_with_index.with_object([]) do |(quantity,i),array|
+      array << {price: prices[i], quantity: quantity}
     end
   end
 
